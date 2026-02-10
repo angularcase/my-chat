@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Skrypt do wklejenia – My-Chat Widget</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; }
+    h1 { font-size: 1.25rem; }
+    pre { background: #f5f5f5; padding: 16px; overflow: auto; font-size: 13px; border-radius: 8px; }
+    .note { background: #e8f4fd; padding: 12px; border-radius: 8px; margin: 16px 0; font-size: 14px; }
+    code { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Gotowy skrypt do wklejenia na stronę klienta (localhost)</h1>
+  <p>Uruchom najpierw frontend (<code>cd frontend && npm start</code>) oraz backend (<code>cd backend && npm run start:dev</code>). Następnie wklej poniższy blok przed zamknięciem <code>&lt;/body&gt;</code> na dowolnej stronie (np. inny projekt na localhost).</p>
+  <div class="note">
+    <strong>URL skryptów:</strong> <code>http://localhost:5200/widget/loader.js</code> (frontend musi działać na porcie 5200).<br>
+    <strong>Backend czatu:</strong> <code>http://localhost:3300</code> (serverUrl w init).
+  </div>
+  <pre><code>&lt;!-- My-Chat Widget --&gt;
+&lt;script&gt;
+(function(w,d){
+  if(w.MyChat)return;
+  var q=[];
+  w.MyChat=function(){q.push(arguments)};
+  w.MyChat._q=q;
+  var s=d.createElement("script");
+  s.async=true;
+  s.src="http://localhost:5200/widget/loader.js";
+  d.head.appendChild(s);
+})(window,document);
+
+MyChat("init",{widgetKey:"demo-widget-key",serverUrl:"http://localhost:3300"});
+&lt;/script&gt;</code></pre>
+  <p>Po załadowaniu strony możesz wywołać w konsoli: <code>MyChat.open()</code>, <code>MyChat.close()</code>, <code>MyChat.destroy()</code>.</p>
+</body>
+</html>

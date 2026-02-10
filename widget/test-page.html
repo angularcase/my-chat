@@ -22,7 +22,7 @@
   <h1>My-Chat Widget Test Page</h1>
   <div class="card">
     <p>This page simulates a client's website with the embedded chat widget.</p>
-    <p>The widget is loaded with <code>data-widget-key="demo-widget-key"</code> pointing to <code>http://localhost:3300</code></p>
+    <p>The widget is loaded via async loader; <code>MyChat("init", { widgetKey: "demo-widget-key", serverUrl: "http://localhost:3300" })</code>.</p>
     <p>Click the blue chat bubble in the bottom-right corner to start a conversation.</p>
   </div>
   <div class="card">
@@ -35,7 +35,20 @@
     </ol>
   </div>
 
-  <!-- My-Chat Widget -->
-  <script src="./dist/widget.js" data-widget-key="demo-widget-key" data-server-url="http://localhost:3300"></script>
+  <!-- My-Chat Widget (async loader + command queue) -->
+  <script>
+  (function(w,d){
+    if(w.MyChat)return;
+    var q=[];
+    w.MyChat=function(){q.push(arguments)};
+    w.MyChat._q=q;
+    var s=d.createElement("script");
+    s.async=true;
+    s.src="./dist/loader.js";
+    d.head.appendChild(s);
+  })(window,document);
+
+  MyChat("init",{widgetKey:"demo-widget-key",serverUrl:"http://localhost:3300"});
+  </script>
 </body>
 </html>

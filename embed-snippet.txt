@@ -1,0 +1,18 @@
+Wklej przed </body> na stronie klienta (localhost).
+Upewnij się, że frontend działa na http://localhost:5200 i backend na http://localhost:3300.
+
+<!-- My-Chat Widget -->
+<script>
+(function(w,d){
+  if(w.MyChat)return;
+  var q=[];
+  w.MyChat=function(){q.push(arguments)};
+  w.MyChat._q=q;
+  var s=d.createElement("script");
+  s.async=true;
+  s.src="http://localhost:5200/widget/loader.js";
+  d.head.appendChild(s);
+})(window,document);
+
+MyChat("init",{widgetKey:"demo-widget-key",serverUrl:"http://localhost:3300"});
+</script>

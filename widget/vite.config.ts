@@ -1,18 +1,21 @@
 import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 
-// Build as a single embeddable widget.js file
+const entry = process.env.VITE_BUILD_ENTRY || 'widget';
+const isLoader = entry === 'loader';
+
 export default defineConfig({
   plugins: [preact()],
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
   },
   build: {
+    emptyOutDir: !isLoader,
     lib: {
-      entry: 'src/index.tsx',
-      name: 'MyChatWidget',
+      entry: isLoader ? 'src/loader.ts' : 'src/index.tsx',
+      name: isLoader ? 'MyChatLoader' : 'MyChatWidget',
       formats: ['iife'],
-      fileName: () => 'widget.js',
+      fileName: () => (isLoader ? 'loader.js' : 'widget.js'),
     },
     cssCodeSplit: false,
     rollupOptions: {
