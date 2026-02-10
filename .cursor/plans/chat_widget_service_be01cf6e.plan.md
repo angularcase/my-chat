@@ -4,10 +4,10 @@ overview: Build a professional chat widget SaaS service with a NestJS backend (R
 todos:
   - id: structures-md
     content: Create structures.md in project root with full service description, data model, API contracts, and roadmap
-    status: pending
+    status: completed
   - id: backend-scaffold
     content: "Scaffold NestJS backend with nest-cli: install deps (Prisma, Socket.IO, Redis, JWT, class-validator, config, throttler)"
-    status: pending
+    status: in_progress
   - id: prisma-schema
     content: "Create Prisma schema with all models: Organization, ChatSpace (+ allowedDomains), Agent (+ isOnline, lastSeenAt), Visitor (+ email?, displayName?), Thread (+ lastActivityAt, expired status), Message"
     status: pending
