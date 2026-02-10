@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { io, Socket } from 'socket.io-client';
 import type { ChatMessage } from '../types';
+import { StorageService } from '../services/storage.service';
 
-const SESSION_TOKEN_KEY = 'mychat_session_token';
+const KEY_SESSION_TOKEN = 'sessionToken';
+const KEY_THREAD_ID = 'threadId';
 
 function getOrCreateSessionToken(): string {
-  let token = localStorage.getItem(SESSION_TOKEN_KEY);
-  if (!token) {
-    token = crypto.randomUUID();
-    localStorage.setItem(SESSION_TOKEN_KEY, token);
-  }
-  return token;
+  return StorageService.getOrCreate(KEY_SESSION_TOKEN, () => crypto.randomUUID());
 }
 
 export interface UseWebSocketReturn {
@@ -26,7 +23,9 @@ export function useWebSocket(
 ): UseWebSocketReturn {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [connected, setConnected] = useState(false);
-  const [threadId, setThreadId] = useState<string | null>(null);
+  const [threadId, setThreadId] = useState<string | null>(
+    () => StorageService.get(KEY_THREAD_ID),
+  );
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -42,12 +41,22 @@ export function useWebSocket(
 
     socketRef.current = socket;
 
-    socket.on('connected', (data: { threadId?: string }) => {
-      setConnected(true);
-      if (data.threadId) {
-        setThreadId(data.threadId);
-      }
-    });
+    socket.on(
+      'connected',
+      (data: { threadId?: string; messages?: ChatMessage[] }) => {
+        setConnected(true);
+
+        if (data.threadId) {
+          setThreadId(data.threadId);
+          StorageService.set(KEY_THREAD_ID, data.threadId);
+        }
+
+        // Backend sends recent history when reconnecting to an existing thread.
+        if (data.messages && data.messages.length > 0) {
+          setMessages(data.messages);
+        }
+      },
+    );
 
     socket.on('disconnect', () => {
       setConnected(false);
@@ -69,6 +78,13 @@ export function useWebSocket(
 
     socket.on('thread:new', (data: { threadId: string }) => {
       setThreadId(data.threadId);
+      StorageService.set(KEY_THREAD_ID, data.threadId);
+    });
+
+    socket.on('thread:closed', () => {
+      // Thread was closed – clear stored threadId so next message starts fresh.
+      setThreadId(null);
+      StorageService.remove(KEY_THREAD_ID);
     });
 
     socket.on('thread:assigned', () => {

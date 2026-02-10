@@ -118,21 +118,42 @@ export class WidgetGateway
         },
         orderBy: { lastActivityAt: 'desc' },
       });
+      let recentMessages: {
+        id: string;
+        content: string;
+        senderType: string;
+        createdAt: Date;
+      }[] = [];
+
       if (activeThread) {
         client.threadId = activeThread.id;
         client.join(`thread:${activeThread.id}`);
+
+        // Load recent message history so the widget can restore the conversation.
+        recentMessages = await this.prisma.message.findMany({
+          where: { threadId: activeThread.id },
+          orderBy: { createdAt: 'asc' },
+          take: 50,
+          select: {
+            id: true,
+            content: true,
+            senderType: true,
+            createdAt: true,
+          },
+        });
       }
       client.join(`visitor:${visitor.id}`);
       client.join(`chatspace:${space.id}`);
 
       this.logger.log(
-        `Widget connected – visitor=${visitor.id}, chatSpace=${space.id}, thread=${activeThread?.id ?? '(new)'}`,
+        `Widget connected – visitor=${visitor.id}, chatSpace=${space.id}, thread=${activeThread?.id ?? '(new)'}, messages=${recentMessages.length}`,
       );
 
       client.emit('connected', {
         visitorId: visitor.id,
         threadId: activeThread?.id ?? null,
         chatSpaceId: space.id,
+        messages: recentMessages,
       });
     } catch (err) {
       this.logger.error('Widget connection error', err);

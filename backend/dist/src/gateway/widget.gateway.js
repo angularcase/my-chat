@@ -90,17 +90,30 @@ let WidgetGateway = WidgetGateway_1 = class WidgetGateway {
                 },
                 orderBy: { lastActivityAt: 'desc' },
             });
+            let recentMessages = [];
             if (activeThread) {
                 client.threadId = activeThread.id;
                 client.join(`thread:${activeThread.id}`);
+                recentMessages = await this.prisma.message.findMany({
+                    where: { threadId: activeThread.id },
+                    orderBy: { createdAt: 'asc' },
+                    take: 50,
+                    select: {
+                        id: true,
+                        content: true,
+                        senderType: true,
+                        createdAt: true,
+                    },
+                });
             }
             client.join(`visitor:${visitor.id}`);
             client.join(`chatspace:${space.id}`);
-            this.logger.log(`Widget connected – visitor=${visitor.id}, chatSpace=${space.id}, thread=${activeThread?.id ?? '(new)'}`);
+            this.logger.log(`Widget connected – visitor=${visitor.id}, chatSpace=${space.id}, thread=${activeThread?.id ?? '(new)'}, messages=${recentMessages.length}`);
             client.emit('connected', {
                 visitorId: visitor.id,
                 threadId: activeThread?.id ?? null,
                 chatSpaceId: space.id,
+                messages: recentMessages,
             });
         }
         catch (err) {
