@@ -1,0 +1,10 @@
+import * as Prisma from './internal/prismaNamespaceBrowser.js';
+export { Prisma };
+export * as $Enums from './enums.js';
+export * from './enums.js';
+export type Organization = Prisma.OrganizationModel;
+export type ChatSpace = Prisma.ChatSpaceModel;
+export type Agent = Prisma.AgentModel;
+export type Visitor = Prisma.VisitorModel;
+export type Thread = Prisma.ThreadModel;
+export type Message = Prisma.MessageModel;

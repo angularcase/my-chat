@@ -7,46 +7,46 @@ todos:
     status: completed
   - id: backend-scaffold
     content: "Scaffold NestJS backend with nest-cli: install deps (Prisma, Socket.IO, Redis, JWT, class-validator, config, throttler)"
-    status: in_progress
+    status: completed
   - id: prisma-schema
     content: "Create Prisma schema with all models: Organization, ChatSpace (+ allowedDomains), Agent (+ isOnline, lastSeenAt), Visitor (+ email?, displayName?), Thread (+ lastActivityAt, expired status), Message"
-    status: pending
+    status: completed
   - id: backend-auth
     content: "Implement auth module: register (org + admin agent), login, JWT guard, current-user decorator"
-    status: pending
+    status: completed
   - id: backend-chat-space
     content: "Implement chat-space module: CRUD endpoints, widgetKey generation"
-    status: pending
+    status: completed
   - id: backend-thread-message
     content: "Implement thread + message modules: list threads, claim thread, close thread, get messages"
-    status: pending
+    status: completed
   - id: backend-security
     content: Implement rate limiting (@nestjs/throttler), origin/domain validation for widget connections (allowedDomains on ChatSpace), CORS config
-    status: pending
+    status: completed
   - id: backend-redis
     content: "Set up Redis: Socket.IO Redis adapter for horizontal scaling, agent online presence tracking (isOnline, lastSeenAt heartbeat)"
-    status: pending
+    status: completed
   - id: backend-ws-widget
     content: "Implement widget WebSocket gateway: visitor connection with origin validation, message handling, thread auto-creation, offline agent detection"
-    status: pending
+    status: completed
   - id: backend-ws-agent
     content: "Implement agent WebSocket gateway: agent connection, space subscription, message relay, thread notifications, presence heartbeat"
-    status: pending
+    status: completed
   - id: widget-scaffold
     content: Scaffold Preact widget project with Vite, configure build to single JS bundle
-    status: pending
+    status: completed
   - id: widget-components
     content: "Build widget components: ChatBubble, ChatWindow, MessageList, MessageInput with Shadow DOM isolation"
-    status: pending
+    status: completed
   - id: widget-websocket
     content: "Implement useWebSocket hook: connect with widgetKey + sessionToken, send/receive messages, reconnection"
-    status: pending
+    status: completed
   - id: widget-entry
     content: "Create widget entry point: read data-widget-key from script tag, mount Preact app in Shadow DOM"
-    status: pending
+    status: completed
   - id: integration-test
     content: "Test full flow: start backend, embed widget on test page, verify visitor-agent message exchange"
-    status: pending
+    status: completed
 isProject: false
 ---
 

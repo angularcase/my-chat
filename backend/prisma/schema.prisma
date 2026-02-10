@@ -1,0 +1,104 @@
+// My-Chat database schema
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  chatSpaces ChatSpace[]
+  agents     Agent[]
+}
+
+model ChatSpace {
+  id              String   @id @default(uuid())
+  organizationId  String
+  name            String
+  widgetKey       String   @unique
+  allowedDomains  String[] @default([])
+  settings        Json?    @default("{}")
+  createdAt       DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  threads      Thread[]
+  visitors     Visitor[]
+}
+
+model Agent {
+  id             String    @id @default(uuid())
+  organizationId String
+  email          String
+  passwordHash   String
+  displayName    String?
+  role           String    @default("agent") // admin | agent
+  isOnline       Boolean   @default(false)
+  lastSeenAt     DateTime?
+  createdAt      DateTime  @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  threads      Thread[]
+}
+
+model Visitor {
+  id          String   @id @default(uuid())
+  chatSpaceId String
+  sessionToken String  @unique
+  email       String?
+  displayName String?
+  metadata    Json?    @default("{}")
+  createdAt   DateTime @default(now())
+
+  chatSpace ChatSpace @relation(fields: [chatSpaceId], references: [id], onDelete: Cascade)
+  threads   Thread[]
+}
+
+enum ThreadStatus {
+  unassigned
+  active
+  closed
+  expired
+}
+
+model Thread {
+  id               String      @id @default(uuid())
+  chatSpaceId      String
+  visitorId        String
+  assignedAgentId  String?
+  status           ThreadStatus @default(unassigned)
+  lastActivityAt   DateTime    @default(now())
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  chatSpace ChatSpace @relation(fields: [chatSpaceId], references: [id], onDelete: Cascade)
+  visitor   Visitor   @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  agent     Agent?    @relation(fields: [assignedAgentId], references: [id], onDelete: SetNull)
+  messages  Message[]
+}
+
+enum MessageSenderType {
+  visitor
+  agent
+  system
+}
+
+model Message {
+  id         String           @id @default(uuid())
+  threadId   String
+  senderType MessageSenderType
+  senderId   String? // visitor id or agent id; null for system
+  content    String
+  createdAt  DateTime         @default(now())
+
+  thread Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: mychat
+      POSTGRES_PASSWORD: mychat
+      POSTGRES_DB: mychat
+    volumes:
+      - mychat-postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - '6380:6379'
+    volumes:
+      - mychat-redis-data:/data
+
+volumes:
+  mychat-postgres-data:
+  mychat-redis-data:
