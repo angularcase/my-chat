@@ -134,10 +134,12 @@ let WidgetGateway = WidgetGateway_1 = class WidgetGateway {
                 threadId = thread.id;
                 client.threadId = threadId;
                 client.join(`thread:${threadId}`);
+                this.logger.log(`New thread created – thread=${threadId}, visitor=${client.visitorId}, chatSpace=${client.chatSpaceId}`);
                 const threadPayload = { threadId: thread.id, visitorId: client.visitorId };
                 this.server.to(`chatspace:${client.chatSpaceId}`).emit('thread:new', threadPayload);
                 this.namespaces.get('agent')?.to(`chatspace:${client.chatSpaceId}`).emit('thread:new', threadPayload);
             }
+            this.logger.log(`💬 Visitor message – thread=${threadId}, visitor=${client.visitorId}: "${content}"`);
             const message = await this.prisma.message.create({
                 data: {
                     threadId,
