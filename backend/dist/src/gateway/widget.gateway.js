@@ -21,19 +21,22 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const origin_validator_service_1 = require("../common/origin-validator.service");
 const socket_namespaces_service_1 = require("./socket-namespaces.service");
+const push_notification_service_1 = require("../modules/device/push-notification.service");
 let WidgetGateway = WidgetGateway_1 = class WidgetGateway {
     prisma;
     originValidator;
     namespaces;
+    pushNotification;
     server;
     afterInit(server) {
         this.namespaces.register('widget', server);
     }
     logger = new common_1.Logger(WidgetGateway_1.name);
-    constructor(prisma, originValidator, namespaces) {
+    constructor(prisma, originValidator, namespaces, pushNotification) {
         this.prisma = prisma;
         this.originValidator = originValidator;
         this.namespaces = namespaces;
+        this.pushNotification = pushNotification;
     }
     async handleConnection(client) {
         try {
@@ -178,6 +181,18 @@ let WidgetGateway = WidgetGateway_1 = class WidgetGateway {
             });
             this.server.to(`thread:${threadId}`).emit('visitor:message', msgPayload);
             this.namespaces.get('agent')?.to(`chatspace:${client.chatSpaceId}`).emit('visitor:message', msgPayload);
+            const space = await this.prisma.chatSpace.findUnique({
+                where: { id: client.chatSpaceId },
+                select: { organizationId: true },
+            });
+            if (space) {
+                await this.pushNotification.notifyAgentsNewMessage(space.organizationId, {
+                    threadId,
+                    chatSpaceId: client.chatSpaceId,
+                    title: 'New chat message',
+                    body: content.length > 80 ? `${content.slice(0, 80)}…` : content,
+                });
+            }
         }
         catch (err) {
             this.logger.warn('Visitor message error', err);
@@ -214,6 +229,7 @@ exports.WidgetGateway = WidgetGateway = WidgetGateway_1 = __decorate([
     }),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         origin_validator_service_1.OriginValidatorService,
-        socket_namespaces_service_1.SocketNamespacesService])
+        socket_namespaces_service_1.SocketNamespacesService,
+        push_notification_service_1.PushNotificationService])
 ], WidgetGateway);
 //# sourceMappingURL=widget.gateway.js.map

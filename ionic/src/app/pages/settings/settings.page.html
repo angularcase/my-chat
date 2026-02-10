@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Ustawienia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-list-header>Status</ion-list-header>
+    <ion-item>
+      <ion-label>Dostępny online</ion-label>
+      <ion-toggle
+        [(ngModel)]="isOnline"
+        (ionChange)="toggleStatus()"
+        [disabled]="savingStatus"
+      ></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand="block" color="danger" class="ion-margin-top" (click)="logout()">
+    Wyloguj
+  </ion-button>
+</ion-content>

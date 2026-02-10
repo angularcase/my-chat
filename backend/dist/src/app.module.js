@@ -15,9 +15,11 @@ const app_controller_1 = require("./app.controller");
 const prisma_module_1 = require("./prisma/prisma.module");
 const redis_module_1 = require("./redis/redis.module");
 const auth_module_1 = require("./modules/auth/auth.module");
+const agent_module_1 = require("./modules/agent/agent.module");
 const chat_space_module_1 = require("./modules/chat-space/chat-space.module");
 const thread_module_1 = require("./modules/thread/thread.module");
 const message_module_1 = require("./modules/message/message.module");
+const device_module_1 = require("./modules/device/device.module");
 const gateway_module_1 = require("./gateway/gateway.module");
 const jwt_auth_guard_1 = require("./common/guards/jwt-auth.guard");
 let AppModule = class AppModule {
@@ -30,9 +32,11 @@ exports.AppModule = AppModule = __decorate([
             prisma_module_1.PrismaModule,
             redis_module_1.RedisModule,
             auth_module_1.AuthModule,
+            agent_module_1.AgentModule,
             chat_space_module_1.ChatSpaceModule,
             thread_module_1.ThreadModule,
             message_module_1.MessageModule,
+            device_module_1.DeviceModule,
             gateway_module_1.GatewayModule,
             throttler_1.ThrottlerModule.forRoot([
                 { name: 'short', ttl: 1000, limit: 10 },

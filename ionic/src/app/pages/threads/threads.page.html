@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/spaces"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Wątki</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="statusFilter" (ionChange)="filterStatus($event.detail.value)">
+      <ion-segment-button value="">
+        <ion-label>Wszystkie</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="unassigned">
+        <ion-label>Nieprzypisane ({{ unassignedCount() }})</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="active">
+        <ion-label>Aktywne</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="closed">
+        <ion-label>Zamknięte</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (loading && threads.length === 0) {
+    <ion-spinner name="crescent" class="ion-center"></ion-spinner>
+  } @else if (error) {
+    <p class="ion-padding ion-text-center" color="danger">{{ error }}</p>
+  } @else {
+    <ion-list>
+      @for (thread of threads; track thread.id) {
+        <ion-item button (click)="openChat(thread)">
+          <ion-icon
+            [name]="thread.status === 'unassigned' ? 'alert-circle-outline' : 'chatbubble-outline'"
+            slot="start"
+          ></ion-icon>
+          <ion-label>
+            <h2>Wątek {{ thread.id.slice(0, 8) }}…</h2>
+            <p>Status: {{ thread.status }} · {{ thread.lastActivityAt | date:'short' }}</p>
+          </ion-label>
+          <ion-icon name="chevron-forward" slot="end"></ion-icon>
+        </ion-item>
+      }
+    </ion-list>
+    @if (threads.length === 0 && !loading) {
+      <p class="ion-padding ion-text-center">Brak wątków.</p>
+    }
+  }
+</ion-content>

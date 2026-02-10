@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GatewayModule = void 0;
 const common_1 = require("@nestjs/common");
 const chat_space_module_1 = require("../modules/chat-space/chat-space.module");
+const device_module_1 = require("../modules/device/device.module");
 const widget_gateway_1 = require("./widget.gateway");
 const agent_gateway_1 = require("./agent.gateway");
 const socket_namespaces_service_1 = require("./socket-namespaces.service");
@@ -17,7 +18,7 @@ let GatewayModule = class GatewayModule {
 exports.GatewayModule = GatewayModule;
 exports.GatewayModule = GatewayModule = __decorate([
     (0, common_1.Module)({
-        imports: [chat_space_module_1.ChatSpaceModule],
+        imports: [chat_space_module_1.ChatSpaceModule, device_module_1.DeviceModule],
         providers: [socket_namespaces_service_1.SocketNamespacesService, widget_gateway_1.WidgetGateway, agent_gateway_1.AgentGateway],
     })
 ], GatewayModule);

@@ -14,6 +14,7 @@ import { Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { OriginValidatorService } from '../common/origin-validator.service';
 import { SocketNamespacesService } from './socket-namespaces.service';
+import { PushNotificationService } from '../modules/device/push-notification.service';
 
 type WidgetSocket = Socket & {
   visitorId?: string;
@@ -41,6 +42,7 @@ export class WidgetGateway
     private readonly prisma: PrismaService,
     private readonly originValidator: OriginValidatorService,
     private readonly namespaces: SocketNamespacesService,
+    private readonly pushNotification: PushNotificationService,
   ) {}
 
   async handleConnection(client: WidgetSocket) {
@@ -232,6 +234,19 @@ export class WidgetGateway
       });
       this.server.to(`thread:${threadId}`).emit('visitor:message', msgPayload);
       this.namespaces.get('agent')?.to(`chatspace:${client.chatSpaceId}`).emit('visitor:message', msgPayload);
+
+      const space = await this.prisma.chatSpace.findUnique({
+        where: { id: client.chatSpaceId },
+        select: { organizationId: true },
+      });
+      if (space) {
+        await this.pushNotification.notifyAgentsNewMessage(space.organizationId, {
+          threadId,
+          chatSpaceId: client.chatSpaceId,
+          title: 'New chat message',
+          body: content.length > 80 ? `${content.slice(0, 80)}…` : content,
+        });
+      }
     } catch (err) {
       this.logger.warn('Visitor message error', err);
       client.emit('error', { message: 'Failed to send message' });

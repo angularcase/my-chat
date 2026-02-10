@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { networkInterfaces } from 'os';
 import { AppModule } from './app.module';
 import { RedisIoAdapter } from './redis/redis-io.adapter';
 
@@ -9,12 +10,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
-  const corsOrigins =
-    process.env.CORS_ORIGINS?.split(',').map((s) => s.trim()) ?? [
-      'http://localhost:3300',
-    ];
   app.enableCors({
-    origin: corsOrigins.length > 0 ? corsOrigins : true,
+    origin: true,
     credentials: true,
   });
 
@@ -24,7 +21,14 @@ async function bootstrap() {
   app.useWebSocketAdapter(redisIoAdapter);
 
   const port = process.env.PORT ?? 3300;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
+  const addrs = Object.values(networkInterfaces())
+    .flat()
+    .filter((i) => i?.family === 'IPv4' && !i.internal)
+    .map((i) => `http://${i!.address}:${port}/api`);
   console.log(`Application is running on: http://localhost:${port}/api`);
+  if (addrs.length) {
+    console.log(`Reachable from network: ${addrs.join(', ')}`);
+  }
 }
 bootstrap();

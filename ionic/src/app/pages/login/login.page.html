@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>My Chat</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-form">
+    <h1>Zaloguj się</h1>
+    <p class="ion-text-center ion-margin-bottom">Agent – email i hasło</p>
+
+    <ion-item>
+      <ion-label position="stacked">Email</ion-label>
+      <ion-input
+        type="email"
+        [(ngModel)]="email"
+        placeholder="agent@firma.pl"
+        [disabled]="loading"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Hasło</ion-label>
+      <ion-input
+        type="password"
+        [(ngModel)]="password"
+        placeholder="••••••••"
+        [disabled]="loading"
+      ></ion-input>
+    </ion-item>
+
+    @if (error) {
+      <ion-note color="danger" class="ion-margin-top">{{ error }}</ion-note>
+    }
+
+    <ion-button
+      expand="block"
+      class="ion-margin-top"
+      (click)="submit()"
+      [disabled]="loading"
+    >
+      {{ loading ? 'Logowanie…' : 'Zaloguj' }}
+    </ion-button>
+
+    <ion-button
+      expand="block"
+      fill="outline"
+      class="ion-margin-top"
+      (click)="testConnection()"
+      [disabled]="loading"
+    >
+      Test połączenia
+    </ion-button>
+    @if (testResult) {
+      <ion-note class="ion-margin-top ion-block">{{ testResult }}</ion-note>
+    }
+  </div>
+</ion-content>

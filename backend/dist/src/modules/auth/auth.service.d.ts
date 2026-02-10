@@ -22,6 +22,7 @@ export declare class AuthService {
         organizationId: string;
     }>;
     login(dto: LoginDto): Promise<AuthTokens>;
+    refresh(refreshToken: string): Promise<AuthTokens>;
     validateAgent(id: string): Promise<{
         id: string;
         email: string;

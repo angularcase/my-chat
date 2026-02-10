@@ -119,6 +119,59 @@ export class AuthService {
     };
   }
 
+  async refresh(refreshToken: string): Promise<AuthTokens> {
+    let payload: JwtPayload & { type?: string };
+    try {
+      payload = this.jwtService.verify<JwtPayload & { type: string }>(
+        refreshToken,
+        {
+          secret: process.env.JWT_REFRESH_SECRET ?? 'refresh-secret',
+        },
+      );
+    } catch {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+    if (payload?.type !== 'refresh') {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    const agent = await this.prisma.agent.findUnique({
+      where: { id: payload.sub },
+      include: { organization: true },
+    });
+    if (!agent) {
+      throw new UnauthorizedException('Agent not found');
+    }
+    const newPayload: JwtPayload = {
+      sub: agent.id,
+      email: agent.email,
+      organizationId: agent.organizationId,
+      role: agent.role,
+    };
+    const accessExpiresIn = 900;
+    const accessToken = this.jwtService.sign(newPayload, {
+      secret: process.env.JWT_ACCESS_SECRET ?? 'access-secret',
+      expiresIn: accessExpiresIn,
+    });
+    const refreshExpiresIn = 7 * 24 * 60 * 60;
+    const newRefreshToken = this.jwtService.sign(
+      { ...newPayload, type: 'refresh' },
+      {
+        secret: process.env.JWT_REFRESH_SECRET ?? 'refresh-secret',
+        expiresIn: refreshExpiresIn,
+      },
+    );
+    const decoded = this.jwtService.decode(accessToken) as { exp?: number };
+    const expiresIn =
+      decoded?.exp != null
+        ? Math.max(0, Math.floor(decoded.exp - Date.now() / 1000))
+        : accessExpiresIn;
+    return {
+      accessToken,
+      refreshToken: newRefreshToken,
+      expiresIn,
+    };
+  }
+
   async validateAgent(id: string) {
     const agent = await this.prisma.agent.findUnique({
       where: { id },

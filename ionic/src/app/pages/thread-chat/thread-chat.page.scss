@@ -1,0 +1,12 @@
+.agent-msg ion-label p {
+  text-align: right;
+}
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 1rem;
+  ion-input {
+    flex: 1;
+  }
+}
