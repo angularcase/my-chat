@@ -4,37 +4,37 @@ overview: Create a Kotlin Multiplatform (Compose Multiplatform) mobile app for A
 todos:
   - id: generate-project
     content: Generate KMP project skeleton using KMP wizard (Android + iOS with shared Compose UI), place in mobile/ directory
-    status: in_progress
+    status: completed
   - id: add-dependencies
     content: "Add all dependencies to build.gradle.kts: Ktor client (core, content-negotiation, auth, logging, serialization), Koin (core, compose), Navigation Compose, Lifecycle ViewModel"
-    status: pending
+    status: completed
   - id: data-models
     content: Create LoginRequest and AuthTokens serializable data classes in commonMain
-    status: pending
+    status: completed
   - id: token-storage
     content: "Create expect/actual TokenStorage: expect in commonMain, actual implementations in androidMain (SharedPreferences) and iosMain (NSUserDefaults)"
-    status: pending
+    status: completed
   - id: http-client
     content: Create Ktor HttpClient factory with ContentNegotiation, Bearer Auth (loadTokens, refreshTokens), configurable base URL
-    status: pending
+    status: completed
   - id: auth-repository
     content: Create AuthRepository with login() method calling POST /api/auth/login
-    status: pending
+    status: completed
   - id: login-viewmodel
     content: "Create LoginViewModel with MVVM pattern: email/password state, loading, error, success via StateFlow"
-    status: pending
+    status: completed
   - id: login-screen
     content: "Create LoginScreen composable with Material 3: email field, password field, login button, loading indicator, error display, success message"
-    status: pending
+    status: completed
   - id: koin-di
     content: Wire up Koin DI modules (shared appModule + platform modules for TokenStorage)
-    status: pending
+    status: completed
   - id: navigation
     content: Set up Navigation Compose with LoginRoute and placeholder HomeRoute
-    status: pending
+    status: completed
   - id: platform-entry
     content: "Configure platform entry points: Android MainActivity and iOS MainViewController"
-    status: pending
+    status: completed
 isProject: false
 ---
 

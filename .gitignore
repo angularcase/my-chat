@@ -1,0 +1,18 @@
+# Java heap dumps
+*.hprof
+
+# OS files
+.DS_Store
+
+# IDE
+.idea/workspace.xml
+.idea/
+
+# Local properties
+local.properties
+
+# Gradle
+.gradle/
+
+# Build outputs
+**/build/
