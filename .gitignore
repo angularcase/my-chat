@@ -14,5 +14,8 @@ local.properties
 # Gradle
 .gradle/
 
+# Kotlin metadata/build
+.kotlin/
+
 # Build outputs
 **/build/
