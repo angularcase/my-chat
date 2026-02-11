@@ -4,7 +4,7 @@ overview: Create a Kotlin Multiplatform (Compose Multiplatform) mobile app for A
 todos:
   - id: generate-project
     content: Generate KMP project skeleton using KMP wizard (Android + iOS with shared Compose UI), place in mobile/ directory
-    status: pending
+    status: in_progress
   - id: add-dependencies
     content: "Add all dependencies to build.gradle.kts: Ktor client (core, content-negotiation, auth, logging, serialization), Koin (core, compose), Navigation Compose, Lifecycle ViewModel"
     status: pending
