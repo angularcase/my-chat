@@ -7,6 +7,11 @@ export declare class ThreadService {
     private readonly chatSpaceService;
     constructor(prisma: PrismaService, chatSpaceService: ChatSpaceService);
     findAllByChatSpace(user: CurrentUserPayload, chatSpaceId: string, status?: ThreadStatus): Promise<({
+        visitor: {
+            id: string;
+            email: string | null;
+            displayName: string | null;
+        };
         agent: {
             id: string;
             email: string;
@@ -15,19 +20,14 @@ export declare class ThreadService {
         _count: {
             messages: number;
         };
-        visitor: {
-            id: string;
-            email: string | null;
-            displayName: string | null;
-        };
     } & {
         id: string;
-        createdAt: Date;
         chatSpaceId: string;
         visitorId: string;
         assignedAgentId: string | null;
         status: import("@prisma/client").$Enums.ThreadStatus;
         lastActivityAt: Date;
+        createdAt: Date;
         updatedAt: Date;
     })[]>;
     claim(user: CurrentUserPayload, threadId: string): Promise<{
@@ -38,43 +38,43 @@ export declare class ThreadService {
         };
     } & {
         id: string;
-        createdAt: Date;
         chatSpaceId: string;
         visitorId: string;
         assignedAgentId: string | null;
         status: import("@prisma/client").$Enums.ThreadStatus;
         lastActivityAt: Date;
+        createdAt: Date;
         updatedAt: Date;
     }>;
     close(user: CurrentUserPayload, threadId: string): Promise<{
         id: string;
-        createdAt: Date;
         chatSpaceId: string;
         visitorId: string;
         assignedAgentId: string | null;
         status: import("@prisma/client").$Enums.ThreadStatus;
         lastActivityAt: Date;
+        createdAt: Date;
         updatedAt: Date;
     }>;
     findOne(user: CurrentUserPayload, threadId: string): Promise<{
-        agent: {
-            id: string;
-            email: string;
-            displayName: string | null;
-        } | null;
         visitor: {
             id: string;
             email: string | null;
             displayName: string | null;
         };
+        agent: {
+            id: string;
+            email: string;
+            displayName: string | null;
+        } | null;
     } & {
         id: string;
-        createdAt: Date;
         chatSpaceId: string;
         visitorId: string;
         assignedAgentId: string | null;
         status: import("@prisma/client").$Enums.ThreadStatus;
         lastActivityAt: Date;
+        createdAt: Date;
         updatedAt: Date;
     }>;
 }
