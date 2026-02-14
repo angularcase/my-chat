@@ -14,4 +14,13 @@ export declare class MessageController {
         }[];
         nextCursor: string | null;
     }>;
+    send(user: CurrentUserPayload, threadId: string, body: {
+        content: string;
+    }): Promise<{
+        id: null;
+        error: string;
+    } | {
+        id: string;
+        error?: undefined;
+    }>;
 }

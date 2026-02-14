@@ -8,5 +8,6 @@ import { SocketNamespacesService } from './socket-namespaces.service';
 @Module({
   imports: [ChatSpaceModule, DeviceModule],
   providers: [SocketNamespacesService, WidgetGateway, AgentGateway],
+  exports: [SocketNamespacesService],
 })
 export class GatewayModule {}

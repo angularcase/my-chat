@@ -20,6 +20,7 @@ exports.GatewayModule = GatewayModule = __decorate([
     (0, common_1.Module)({
         imports: [chat_space_module_1.ChatSpaceModule, device_module_1.DeviceModule],
         providers: [socket_namespaces_service_1.SocketNamespacesService, widget_gateway_1.WidgetGateway, agent_gateway_1.AgentGateway],
+        exports: [socket_namespaces_service_1.SocketNamespacesService],
     })
 ], GatewayModule);
 //# sourceMappingURL=gateway.module.js.map

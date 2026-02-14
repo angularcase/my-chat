@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import {
   CurrentUser,
   type CurrentUserPayload,
@@ -18,5 +18,15 @@ export class MessageController {
   ) {
     const takeNum = take != null ? Math.min(100, Math.max(1, parseInt(take, 10))) : 50;
     return this.messageService.findByThread(user, threadId, cursor, takeNum);
+  }
+
+  @Post()
+  send(
+    @CurrentUser() user: CurrentUserPayload,
+    @Param('threadId') threadId: string,
+    @Body() body: { content: string },
+  ) {
+    const content = typeof body?.content === 'string' ? body.content.trim() : '';
+    return this.messageService.sendMessage(user, threadId, content);
   }
 }

@@ -1,10 +1,12 @@
 import { PrismaService } from '../../prisma/prisma.service';
+import { SocketNamespacesService } from '../../gateway/socket-namespaces.service';
 import { ChatSpaceService } from '../chat-space/chat-space.service';
 import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 export declare class MessageService {
     private readonly prisma;
     private readonly chatSpaceService;
-    constructor(prisma: PrismaService, chatSpaceService: ChatSpaceService);
+    private readonly namespaces;
+    constructor(prisma: PrismaService, chatSpaceService: ChatSpaceService, namespaces: SocketNamespacesService);
     findByThread(user: CurrentUserPayload, threadId: string, cursor?: string, take?: number): Promise<{
         messages: {
             id: string;
@@ -15,5 +17,12 @@ export declare class MessageService {
             content: string;
         }[];
         nextCursor: string | null;
+    }>;
+    sendMessage(user: CurrentUserPayload, threadId: string, content: string): Promise<{
+        id: null;
+        error: string;
+    } | {
+        id: string;
+        error?: undefined;
     }>;
 }

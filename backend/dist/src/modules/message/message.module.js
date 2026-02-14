@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessageModule = void 0;
 const common_1 = require("@nestjs/common");
+const gateway_module_1 = require("../../gateway/gateway.module");
 const chat_space_module_1 = require("../chat-space/chat-space.module");
 const message_controller_1 = require("./message.controller");
 const message_service_1 = require("./message.service");
@@ -16,7 +17,7 @@ let MessageModule = class MessageModule {
 exports.MessageModule = MessageModule;
 exports.MessageModule = MessageModule = __decorate([
     (0, common_1.Module)({
-        imports: [chat_space_module_1.ChatSpaceModule],
+        imports: [chat_space_module_1.ChatSpaceModule, gateway_module_1.GatewayModule],
         controllers: [message_controller_1.MessageController],
         providers: [message_service_1.MessageService],
         exports: [message_service_1.MessageService],

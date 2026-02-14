@@ -25,6 +25,10 @@ let MessageController = class MessageController {
         const takeNum = take != null ? Math.min(100, Math.max(1, parseInt(take, 10))) : 50;
         return this.messageService.findByThread(user, threadId, cursor, takeNum);
     }
+    send(user, threadId, body) {
+        const content = typeof body?.content === 'string' ? body.content.trim() : '';
+        return this.messageService.sendMessage(user, threadId, content);
+    }
 };
 exports.MessageController = MessageController;
 __decorate([
@@ -37,6 +41,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", void 0)
 ], MessageController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __param(1, (0, common_1.Param)('threadId')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, Object]),
+    __metadata("design:returntype", void 0)
+], MessageController.prototype, "send", null);
 exports.MessageController = MessageController = __decorate([
     (0, common_1.Controller)('threads/:threadId/messages'),
     __metadata("design:paramtypes", [message_service_1.MessageService])
