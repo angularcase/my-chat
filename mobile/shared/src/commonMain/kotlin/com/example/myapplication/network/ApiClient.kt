@@ -3,6 +3,7 @@ package com.example.myapplication.network
 import com.example.myapplication.model.AuthTokens
 import com.example.myapplication.model.ChatSpace
 import com.example.myapplication.model.LoginRequest
+import com.example.myapplication.model.ThreadResponse
 import com.example.myapplication.storage.TokenStorage
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -49,6 +50,13 @@ class ApiClient(
     suspend fun getChatSpaces(): List<ChatSpace> {
         val response = httpClient.get("$apiBaseUrl/chat-spaces")
         return response.body<List<ChatSpace>>()
+    }
+
+    suspend fun getThreads(chatSpaceId: String, status: String? = null): List<ThreadResponse> {
+        val response = httpClient.get("$apiBaseUrl/chat-spaces/$chatSpaceId/threads") {
+            status?.let { parameter("status", it) }
+        }
+        return response.body<List<ThreadResponse>>()
     }
 
     companion object {
